@@ -1,0 +1,34 @@
+{% import "_includes/forms" as forms %}
+
+{% macro configWarning(setting, file) -%}
+    {%- set configArray = craft.app.config.getConfigFromFile(file) -%}
+    {%- if configArray[setting] is defined -%}
+        {{- "This is being overridden by the `#{setting}` setting in the `config/#{file}.php` file." |raw }}
+    {%- else -%}
+        {{ false }}
+    {%- endif -%}
+{%- endmacro %}
+
+{{ forms.lightswitchField({
+    first: true,
+    label: 'Enabled' | t('whitelist'),
+    instructions: 'Should the whitelist be enforced?' | t('whitelist'),
+    id: 'enabled',
+    name: 'enabled',
+    value: 1,
+    on: settings.enabled,
+    errors: settings.getErrors('enabled'),
+    warning: _self.configWarning('enabled', 'whitelist'),
+	disabled: _self.configWarning('enabled', 'whitelist'),
+}) }}
+
+{{ forms.textareaField({
+	label: 'Whitelist' | t('whitelist'),
+	instructions: 'List of IP adresses or CIDR blocks to whitelist (one per line)' | t('whitelist'),
+	id: 'whitelist',
+	name: 'whitelist',
+	value: settings.whitelist|join("\n"),
+    errors: settings.getErrors('whitelist'),
+    warning: _self.configWarning('whitelist', 'whitelist'),
+	disabled: _self.configWarning('whitelist', 'whitelist') ? true : false,
+}) }}
