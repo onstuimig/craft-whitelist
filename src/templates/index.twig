@@ -1,0 +1,42 @@
+{% extends 'whitelist/_sectionLayout.twig' %}
+
+
+{% set selectedItem = "edit" %}
+
+{% set fullPageForm = true %}
+
+{% set overrideWarning = _self.configWarning('whitelist', 'whitelist') %}
+
+{% block sectionContent %}
+	{% import '_includes/forms' as forms %}
+
+	{{ actionInput('whitelist/settings/save') }}
+
+	{% if overrideWarning %}
+		<p class="warning with-icon">{{ overrideWarning }}</p>
+	{% endif %}
+
+	{% set rows = {} %}
+	{% for ip in ips %}
+		{% set rows = rows|merge( {('id-'~ip.id): {ip: ip.ip, comment: ip.comment}} ) %}
+	{% endfor %}
+
+	{{ forms.editableTable({
+		id: 'whitelist',
+		name: 'whitelist',
+		cols: {
+			ip: {
+				heading: 'IP or CIDR' | t('whitelist'),
+				info: 'IP adress or CIDR block',
+				type: 'singleline'
+			},
+			comment: {
+				heading: 'Comment' | t('whitelist'),
+				type: 'singleline'
+			}
+		},
+		rows: rows
+	}) }}
+
+
+{% endblock %}

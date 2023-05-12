@@ -2,7 +2,7 @@
 	"name": "onstuimig/craft-whitelist",
 	"description": "Allow CP access based on an IP whitelist, including CIDR support.",
 	"type": "craft-plugin",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"keywords": [
 		"craft",
 		"cms",
@@ -38,6 +38,6 @@
 		"handle": "whitelist",
 		"class": "onstuimig\\whitelist\\Whitelist",
 		"hasCpSettings": true,
-		"schemaVersion": "1.0.0"
+		"schemaVersion": "1.1.0"
 	}
 }

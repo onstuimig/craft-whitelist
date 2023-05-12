@@ -4,9 +4,15 @@ namespace onstuimig\whitelist;
 use Craft;
 use craft\base\Model;
 use craft\base\Plugin;
+use craft\events\RegisterCpNavItemsEvent;
+use craft\events\RegisterUserPermissionsEvent;
+use craft\services\UserPermissions;
 use craft\web\Request;
+use craft\web\twig\variables\Cp;
+use craft\web\twig\variables\CraftVariable;
 use onstuimig\whitelist\models\Settings;
 use onstuimig\whitelist\services\WhitelistService;
+use yii\base\Event;
 use yii\web\HttpException;
 
 /**
@@ -39,6 +45,43 @@ class Whitelist extends Plugin
 				throw new HttpException(403, Craft::t('whitelist', 'Your IP is not allowed to access the control panel. Please contact your site administrator to add this IP to the whitelist: ') . $ip);
 			}
 		}
+
+		Event::on(
+			UserPermissions::class,
+			UserPermissions::EVENT_REGISTER_PERMISSIONS,
+			function(RegisterUserPermissionsEvent $event) {
+				$event->permissions[Craft::t('whitelist', 'Whitelist')] = [
+					'whitelist:settings' => [
+						'label' => Craft::t('whitelist', 'Settings'),
+					]
+				];
+			}
+		);
+
+		Event::on(
+			Cp::class,
+			Cp::EVENT_REGISTER_CP_NAV_ITEMS,
+			function(RegisterCpNavItemsEvent $event) {
+				if (Craft::$app->user->checkPermission('whitelist:settings')) {
+					$event->navItems[] = [
+						'url' => 'whitelist',
+						'label' => Craft::t('whitelist', 'Whitelist'),
+						'icon' => '@onstuimig/whitelist/icon-mask.svg',
+					];
+				}
+			}
+		);
+
+		Event::on(
+			CraftVariable::class,
+			CraftVariable::EVENT_INIT,
+			function(Event $e) {
+				/** @var CraftVariable $variable */
+				$variable = $e->sender;
+				
+				$variable->set('whitelist', WhitelistService::class);
+			}
+		);
 
 		Craft::info(
             Craft::t(

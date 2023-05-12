@@ -1,0 +1,43 @@
+{% extends "_layouts/cp" %}
+{% set title = "Whitelist"|t('whitelist') %}
+
+{% set navItems = {
+	edit: {
+		url: url('whitelist'),
+		label: 'Edit'|t('whitelist')
+	},
+	bulk: {
+		url: url('whitelist/bulk'),
+		label: 'Bulk edit'|t('whitelist')
+	}
+} %}
+
+{% block sidebar %}    
+	<nav>
+		<ul>
+			{% for itemId, item in navItems %}
+				{% if item %}
+					{% set itemIsSelected = ((selectedItem is not defined and loop.first) or (selectedItem is defined and selectedItem == itemId)) -%}
+					<li><a{% if itemIsSelected %} class="sel"{% endif %} href="{{ item.url }}">{{ item.label }}</a></li>
+				{% endif %}
+			{% endfor %}
+		</ul>
+	</nav>
+{% endblock %}
+
+{% set ips = craft.whitelist.getIps() %}
+
+
+{% macro configWarning(setting, file, settings) -%}
+	{%- set configArray = craft.app.config.getConfigFromFile(file) -%}
+	{%- set settings = craft.app.getPlugins().getPlugin('whitelist').getSettings() -%}
+	{%- if configArray[setting] is defined -%}
+		{{- "This is being overridden by the `#{setting}` setting in the `config/#{file}.php` file." |raw }}
+	{%- elseif settings[setting] is defined and settings[setting] is not empty and settings[setting]|join('') is not empty -%}
+		{{- "This is being overridden by the `#{setting}` plugin setting." |raw }}
+	{%- else -%}
+		{{ false }}
+	{%- endif -%}
+{%- endmacro %}
+
+{% block content %}{% block sectionContent %}{% endblock %}{% endblock %}

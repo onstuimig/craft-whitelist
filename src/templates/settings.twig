@@ -23,8 +23,8 @@
 }) }}
 
 {{ forms.textareaField({
-	label: 'Whitelist' | t('whitelist'),
-	instructions: 'List of IP adresses or CIDR blocks to whitelist (one per line)' | t('whitelist'),
+	label: 'Whitelist override' | t('whitelist'),
+	instructions: 'List of IP adresses or CIDR blocks to whitelist (one per line), overrides the values in the plugin section.' | t('whitelist'),
 	id: 'whitelist',
 	name: 'whitelist',
 	value: settings.whitelist|join("\n"),

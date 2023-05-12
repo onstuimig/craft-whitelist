@@ -1,0 +1,34 @@
+{% extends 'whitelist/_sectionLayout.twig' %}
+
+
+{% set selectedItem = "bulk" %}
+
+{% set fullPageForm = true %}
+
+{% block sectionContent %}
+	{% import '_includes/forms' as forms %}
+
+	{% set whitelist = [] %}
+	{% for ip in ips %}
+		{% set ipItem = ip.ip %}
+		{% if ip.comment %}
+			{% set ipItem = ipItem ~ ' #' ~ ip.comment %}
+		{% endif %}
+		{% set whitelist = whitelist|merge([ipItem]) %}
+	{% endfor %}
+
+	{{ actionInput('whitelist/settings/save-bulk') }}
+
+	{{ forms.textareaField({
+		label: 'Whitelist' | t('whitelist'),
+		instructions: 'List of IP adresses or CIDR blocks to whitelist (one per line)' | t('whitelist'),
+		id: 'whitelistBulk',
+		name: 'whitelistBulk',
+		value: whitelist|join("\n"),
+		warning: _self.configWarning('whitelist', 'whitelist'),
+		disabled: _self.configWarning('whitelist', 'whitelist') ? true : false,
+		rows: 30
+	}) }}
+
+
+{% endblock %}
