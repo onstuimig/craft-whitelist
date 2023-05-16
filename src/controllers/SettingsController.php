@@ -8,13 +8,6 @@ use onstuimig\whitelist\Whitelist;
 
 class SettingsController extends Controller
 {
-	/**
-     * @var    bool|array Allows anonymous access to this controller's actions.
-     *         The actions must be in 'kebab-case'
-     * @access protected
-     */
-    protected $allowAnonymous = [];
-
 
 	/**
 	 * Save settings
@@ -30,10 +23,19 @@ class SettingsController extends Controller
 
 		$whitelist = \Craft::$app->request->getBodyParam('whitelist');
 
+		if(empty($whitelist)) {
+			$whitelist = [];
+		}
+
 		/** @var Ip[] */
 		$ipModels = [];
 
 		foreach ($whitelist as $key => $item) {
+			$ip = trim($item['ip']);
+
+			if(empty($ip))
+				continue;
+			
 			// $id = null;
 			// if(substr( $key, 0, 3 ) === "id-") {
 			// 	$id = (int) substr( $key, 3 );
@@ -55,8 +57,8 @@ class SettingsController extends Controller
 			// $ipRecord->save();
 
 			$ipModel = new Ip([
-				'ip'		=> $item['ip'],
-				'comment'	=> $item['comment'] ?: null
+				'ip'		=> $ip,
+				'comment'	=> trim($item['comment']) ?: null
 			]);
 			
 			$ipModels[] = $ipModel;

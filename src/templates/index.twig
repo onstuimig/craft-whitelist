@@ -17,13 +17,18 @@
 	{% endif %}
 
 	{% set rows = {} %}
-	{% for ip in ips %}
-		{% set rows = rows|merge( {('id-'~ip.id): {ip: ip.ip, comment: ip.comment}} ) %}
+	{% for index, ip in ips %}
+		{% set rows = rows|merge( {(ip.id ? 'id-'~ip.id : 'i-'~index): {ip: ip.ip, comment: ip.comment}} ) %}
 	{% endfor %}
 
 	{{ forms.editableTable({
 		id: 'whitelist',
 		name: 'whitelist',
+		allowAdd: true,
+		addRowLabel: 'Add an IP'|t('whitelist'),
+		allowDelete: true,
+		allowReorder: true,
+		static: overrideWarning ? true : false,
 		cols: {
 			ip: {
 				heading: 'IP or CIDR' | t('whitelist'),
@@ -37,6 +42,5 @@
 		},
 		rows: rows
 	}) }}
-
 
 {% endblock %}

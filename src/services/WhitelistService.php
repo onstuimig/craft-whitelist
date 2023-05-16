@@ -64,7 +64,7 @@ class WhitelistService extends Component
 
 		$ips = [];
 		foreach ($ipRecords as $ipRecord) {
-			$ips[] = new IpModel($ipRecord);
+			$ips[] = new IpModel($ipRecord->toArray());
 		}
 
 		return $ips;
