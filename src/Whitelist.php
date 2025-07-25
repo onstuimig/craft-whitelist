@@ -50,9 +50,12 @@ class Whitelist extends Plugin
 			UserPermissions::class,
 			UserPermissions::EVENT_REGISTER_PERMISSIONS,
 			function(RegisterUserPermissionsEvent $event) {
-				$event->permissions[Craft::t('whitelist', 'Whitelist')] = [
-					'whitelist:settings' => [
-						'label' => Craft::t('whitelist', 'Settings'),
+				$event->permissions[] = [
+					'heading' => Craft::t('whitelist', 'Whitelist'),
+					'permissions' => [
+						'whitelist:settings' => [
+							'label' => Craft::t('whitelist', 'Settings'),
+						]
 					]
 				];
 			}

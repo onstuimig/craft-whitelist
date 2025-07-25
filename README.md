@@ -6,7 +6,7 @@ Allow CP access based on an IP whitelist, including CIDR support.
 
 ## Requirements
 
-This plugin requires Craft CMS 3.1 or later.
+This plugin requires Craft CMS 4.0 or later.
 
 ## Installation
 
