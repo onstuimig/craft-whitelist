@@ -9,16 +9,27 @@ class Settings extends Model
 	 * @var bool
 	 */
 	public $enabled = false;
+
+	/**
+	 * @var bool
+	 */
+	public $enabledFrontend = false;
 	
 	/**
 	 * @var string[]
 	 */
 	public $whitelist = [];
 
+	/**
+	 * @var bool
+	 */
+	public $useRemoteIp = false;
+
+
 	public function rules(): array
 	{
 		return [
-			[['enabled'], 'boolean'],
+			[['enabled', 'enabledFrontend', 'useRemoteIp'], 'boolean'],
 		];
 	}
 

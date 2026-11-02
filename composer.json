@@ -1,8 +1,8 @@
 {
 	"name": "onstuimig/craft-whitelist",
-	"description": "Allow CP access based on an IP whitelist, including CIDR support.",
+	"description": "Allow CP or front-end access based on an IP whitelist, including CIDR support.",
 	"type": "craft-plugin",
-	"version": "2.0.0",
+	"version": "2.1.0",
 	"keywords": [
 		"craft",
 		"cms",

@@ -22,6 +22,19 @@
 	disabled: _self.configWarning('enabled', 'whitelist'),
 }) }}
 
+{{ forms.lightswitchField({
+    first: true,
+    label: 'Enabled Front-end' | t('whitelist'),
+    instructions: 'Should the whitelist be enforced for the front-end?' | t('whitelist'),
+    id: 'enabledFrondend',
+    name: 'enabledFrondend',
+    value: 1,
+    on: settings.enabledFrondend,
+    errors: settings.getErrors('enabledFrondend'),
+    warning: _self.configWarning('enabledFrondend', 'whitelist'),
+	disabled: _self.configWarning('enabledFrondend', 'whitelist'),
+}) }}
+
 {{ forms.textareaField({
 	label: 'Whitelist override' | t('whitelist'),
 	instructions: 'List of IP adresses or CIDR blocks to whitelist (one per line), overrides the values in the plugin section.' | t('whitelist'),

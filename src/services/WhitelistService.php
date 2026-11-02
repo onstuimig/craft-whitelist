@@ -20,13 +20,6 @@ class WhitelistService extends Component
 	 */
 	public function ipOnWhitelist(string $ip): bool
 	{
-		$settings = Whitelist::getInstance()->getSettings();
-
-		// If plugin is disabled, ignore whitelist funcionality
-		if(!$settings->enabled) {
-			return true;
-		}
-
 		$this->skipPermissionCheck = true;
 		$ips = $this->getIps();
 		$this->skipPermissionCheck = false;
