@@ -19,9 +19,14 @@ return [
 
 	'useRemoteIp' => false,
 
-	// List all IPs or CIDR blocks allowed to access the CP and/or front-end
+	// List all IPs or CIDR blocks allowed to access the CP and front-end
 	'whitelist' => [
 		'::1',
 		'127.0.0.1'
+	],
+
+	// List all IPs or CIDR blocks allowed to access the front-end
+	'whitelistFrontend' => [
+		'10.10.0.20'
 	]
 ];

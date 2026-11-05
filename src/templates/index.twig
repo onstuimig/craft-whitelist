@@ -6,41 +6,100 @@
 {% set fullPageForm = true %}
 
 {% set overrideWarning = _self.configWarning('whitelist', 'whitelist') %}
+{% set overrideWarningFrontend = _self.configWarning('whitelistFrontend', 'whitelist') %}
 
 {% block sectionContent %}
 	{% import '_includes/forms' as forms %}
 
 	{{ actionInput('whitelist/settings/save') }}
 
-	{% if overrideWarning %}
-		<p class="warning with-icon">{{ overrideWarning }}</p>
-	{% endif %}
+	<div>
+		<div class="field">
+			<h2 class="heading">
+				{% if settings.enabledFrontend %}
+					{{ 'Main whitelist'|t('whitelist') }}
+				{% else %}
+					{{ 'Whitelist'|t('whitelist') }}
+				{% endif %}
+			</h2>
+			<p class="instructions">
+				{% if settings.enabledFrontend %}
+					{{ 'These IP addresses have access to the control panel and the front-end.'|t('whitelist') }}
+				{% else %}
+					{{ 'These IP addresses have access to the control panel.'|t('whitelist') }}
+				{% endif %}
+			</p>
 
-	{% set rows = {} %}
-	{% for index, ip in ips %}
-		{% set rows = rows|merge( {(ip.id ? 'id-'~ip.id : 'i-'~index): {ip: ip.ip, comment: ip.comment}} ) %}
-	{% endfor %}
+			{% if overrideWarning %}
+				<p class="warning with-icon">{{ overrideWarning }}</p>
+			{% endif %}
 
-	{{ forms.editableTable({
-		id: 'whitelist',
-		name: 'whitelist',
-		allowAdd: true,
-		addRowLabel: 'Add an IP'|t('whitelist'),
-		allowDelete: true,
-		allowReorder: true,
-		static: overrideWarning ? true : false,
-		cols: {
-			ip: {
-				heading: 'IP or CIDR' | t('whitelist'),
-				info: 'IP adress or CIDR block',
-				type: 'singleline'
-			},
-			comment: {
-				heading: 'Comment' | t('whitelist'),
-				type: 'singleline'
-			}
-		},
-		rows: rows
-	}) }}
+			{% set rows = {} %}
+			{% for index, ip in ips %}
+				{% set rows = rows|merge( {(ip.id ? 'id-'~ip.id : 'i-'~index): {ip: ip.ip, comment: ip.comment}} ) %}
+			{% endfor %}
 
+			<div class="input">
+				{{ forms.editableTable({
+					id: 'whitelist',
+					name: 'whitelist',
+					allowAdd: true,
+					addRowLabel: 'Add an IP'|t('whitelist'),
+					allowDelete: true,
+					allowReorder: true,
+					static: overrideWarning ? true : false,
+					cols: {
+						ip: {
+							heading: 'IP or CIDR' | t('whitelist'),
+							info: 'IP adress or CIDR block',
+							type: 'singleline'
+						},
+						comment: {
+							heading: 'Comment' | t('whitelist'),
+							type: 'singleline'
+						}
+					},
+					rows: rows
+				}) }}
+			</div>
+		</div>
+
+		{% if settings.enabledFrontend %}
+			<div class="field">
+				<h2 class="heading">{{ 'Front-end whitelist'|t('whitelist') }}</h2>
+				<p class="instructions">{{ 'These IP addresses have access to the front-end only.'|t('whitelist') }}</p>
+
+				{% if overrideWarningFrontend %}
+					<p class="warning with-icon">{{ overrideWarningFrontend }}</p>
+				{% endif %}
+
+				{% set rowsFrontend = {} %}
+				{% for index, ip in ipsFrontend %}
+					{% set rowsFrontend = rowsFrontend|merge( {(ip.id ? 'id-'~ip.id : 'i-'~index): {ip: ip.ip, comment: ip.comment}} ) %}
+				{% endfor %}
+
+				{{ forms.editableTable({
+					id: 'whitelistFrontend',
+					name: 'whitelistFrontend',
+					allowAdd: true,
+					addRowLabel: 'Add an IP'|t('whitelist'),
+					allowDelete: true,
+					allowReorder: true,
+					static: overrideWarningFrontend ? true : false,
+					cols: {
+						ip: {
+							heading: 'IP or CIDR' | t('whitelist'),
+							info: 'IP adress or CIDR block',
+							type: 'singleline'
+						},
+						comment: {
+							heading: 'Comment' | t('whitelist'),
+							type: 'singleline'
+						}
+					},
+					rows: rowsFrontend
+				}) }}
+			</div>
+		{% endif %}
+	</div>
 {% endblock %}

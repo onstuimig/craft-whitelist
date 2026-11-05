@@ -24,6 +24,7 @@ class Install extends Migration
                 'uid' => $this->uid(),
 				'ip' => $this->string(64)->notNull()->unique(),
 				'comment' => $this->string(255),
+				'frontendOnly' => $this->boolean()->notNull()->defaultValue(false),
 			]);
 		}
 

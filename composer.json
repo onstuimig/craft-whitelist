@@ -2,7 +2,7 @@
 	"name": "onstuimig/craft-whitelist",
 	"description": "Allow CP or front-end access based on an IP whitelist, including CIDR support.",
 	"type": "craft-plugin",
-	"version": "2.1.0",
+	"version": "2.2.0",
 	"keywords": [
 		"craft",
 		"cms",
@@ -39,7 +39,7 @@
 		"handle": "whitelist",
 		"class": "onstuimig\\whitelist\\Whitelist",
 		"hasCpSettings": true,
-		"schemaVersion": "1.1.0"
+		"schemaVersion": "2.2.0"
 	},
     "scripts": {
         "phpstan": "phpstan --memory-limit=1G"

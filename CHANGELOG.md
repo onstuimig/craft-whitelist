@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.2.0 - 2026-11-05
+### Added
+- Allow adding IPs that only have access to the front-end
+
 ## 2.1.0 - 2026-11-02
 ### Added
 - Optionally restrict front-end access to the whitelisted IP addresses

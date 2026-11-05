@@ -12,6 +12,16 @@
 	}
 } %}
 
+{% if craft.app.getConfig().getGeneral().allowAdminChanges %}
+	{% set navItems = navItems|merge({
+		settings: {
+			url: url('settings/plugins/whitelist'),
+			label: 'Settings'|t('whitelist')
+		}
+	}) %}
+{% endif %}
+
+
 {% block sidebar %}    
 	<nav>
 		<ul>
@@ -25,12 +35,14 @@
 	</nav>
 {% endblock %}
 
-{% set ips = craft.whitelist.getIps() %}
+{% set ips = craft.whitelist.getIps(false) %}
+{% set ipsFrontend = craft.whitelist.getIps(true) %}
 
+{% set settings = craft.app.getPlugins().getPlugin('whitelist').getSettings() %}
 
 {% macro configWarning(setting, file, settings) -%}
 	{%- set configArray = craft.app.config.getConfigFromFile(file) -%}
-	{%- set settings = craft.app.getPlugins().getPlugin('whitelist').getSettings() -%}
+	{%- set settings = settings ?? craft.app.getPlugins().getPlugin('whitelist').getSettings() -%}
 	{%- if configArray[setting] is defined -%}
 		{{- "This is being overridden by the `#{setting}` setting in the `config/#{file}.php` file." |raw }}
 	{%- elseif settings[setting] is defined and settings[setting] is not empty and settings[setting]|join('') is not empty -%}

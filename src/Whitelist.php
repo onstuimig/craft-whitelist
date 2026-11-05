@@ -85,6 +85,9 @@ class Whitelist extends Plugin
 		if(!is_array($this->settings->whitelist)) {
 			$this->settings->whitelist = array_map('trim', explode(PHP_EOL, $this->settings->whitelist));
 		}
+		if(!is_array($this->settings->whitelistFrontend)) {
+			$this->settings->whitelistFrontend = array_map('trim', explode(PHP_EOL, $this->settings->whitelistFrontend));
+		}
 		
 		return parent::beforeSaveSettings();
 	}
@@ -125,7 +128,7 @@ class Whitelist extends Plugin
 				throw new HttpException(403, Craft::t('whitelist', 'Your IP is not allowed to access the control panel. Please contact your site administrator to add this IP to the whitelist: {ip}', ['ip' => $ip]));
 			}
 		} elseif ($settings->enabledFrontend) {
-			if(!$this->whitelistService->ipOnWhitelist($ip)) {
+			if(!$this->whitelistService->ipOnWhitelist($ip, true)) {
 				$view = Craft::$app->getView();
 				if ($view->doesTemplateExist('_iplock', View::TEMPLATE_MODE_SITE)) {
 					$html = $view->renderTemplate(

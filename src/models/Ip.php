@@ -36,4 +36,9 @@ class Ip extends Model
 	 */
 	public $comment;
 
+	/**
+	 * @var bool Whether the ip should only be whitelisted for the front-end
+	 */
+	public $frontendOnly;
+
 }

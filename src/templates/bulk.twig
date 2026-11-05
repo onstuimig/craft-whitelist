@@ -8,27 +8,64 @@
 {% block sectionContent %}
 	{% import '_includes/forms' as forms %}
 
-	{% set whitelist = [] %}
-	{% for ip in ips %}
-		{% set ipItem = ip.ip %}
-		{% if ip.comment %}
-			{% set ipItem = ipItem ~ ' #' ~ ip.comment %}
-		{% endif %}
-		{% set whitelist = whitelist|merge([ipItem]) %}
-	{% endfor %}
-
 	{{ actionInput('whitelist/settings/save-bulk') }}
 
-	{{ forms.textareaField({
-		label: 'Whitelist' | t('whitelist'),
-		instructions: 'List of IP adresses or CIDR blocks to whitelist (one per line)' | t('whitelist'),
-		id: 'whitelistBulk',
-		name: 'whitelistBulk',
-		value: whitelist|join("\n"),
-		warning: _self.configWarning('whitelist', 'whitelist'),
-		disabled: _self.configWarning('whitelist', 'whitelist') ? true : false,
-		rows: 30
-	}) }}
+	<div style="display:flex; flex-direction: row; gap: var(--padding);">
+		<div style="flex: 1">
+			{% set whitelist = [] %}
+			{% for ip in ips %}
+				{% set ipItem = ip.ip %}
+				{% if ip.comment %}
+					{% set ipItem = ipItem ~ ' #' ~ ip.comment %}
+				{% endif %}
+				{% set whitelist = whitelist|merge([ipItem]) %}
+			{% endfor %}
 
+		
+			{% if settings.enabledFrontend %}
+				{% set heading = 'Main whitelist' | t('whitelist') %}
+				{% set instructions = 'List of IP adresses or CIDR blocks to whitelist for the control panel and the front-end (one per line)' | t('whitelist') %}
+			{% else %}
+				{% set heading = 'Whitelist' | t('whitelist') %}
+				{% set instructions = 'List of IP adresses or CIDR blocks to whitelist for the control panel (one per line)' | t('whitelist') %}
+			{% endif %}
+
+
+			{{ forms.textareaField({
+				label: heading,
+				instructions: instructions,
+				id: 'whitelistBulk',
+				name: 'whitelistBulk',
+				value: whitelist|join("\n"),
+				warning: _self.configWarning('whitelist', 'whitelist'),
+				disabled: _self.configWarning('whitelist', 'whitelist') ? true : false,
+				rows: 30
+			}) }}
+		</div>
+
+		{% if settings.enabledFrontend %}
+			<div style="flex: 1">
+				{% set whitelistFrontend = [] %}
+				{% for ip in ipsFrontend %}
+					{% set ipItem = ip.ip %}
+					{% if ip.comment %}
+						{% set ipItem = ipItem ~ ' #' ~ ip.comment %}
+					{% endif %}
+					{% set whitelistFrontend = whitelistFrontend|merge([ipItem]) %}
+				{% endfor %}
+
+				{{ forms.textareaField({
+					label: 'Front-end whitelist' | t('whitelist'),
+					instructions: 'List of IP adresses or CIDR blocks to whitelist for the front-end (one per line)' | t('whitelist'),
+					id: 'whitelistBulkFrontend',
+					name: 'whitelistBulkFrontend',
+					value: whitelistFrontend|join("\n"),
+					warning: _self.configWarning('whitelistFrontend', 'whitelist'),
+					disabled: _self.configWarning('whitelistFrontend', 'whitelist') ? true : false,
+					rows: 30
+				}) }}
+			</div>
+		{% endif %}
+	</div>
 
 {% endblock %}

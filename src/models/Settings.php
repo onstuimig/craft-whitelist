@@ -19,6 +19,11 @@ class Settings extends Model
 	 * @var string[]
 	 */
 	public $whitelist = [];
+	
+	/**
+	 * @var string[]
+	 */
+	public $whitelistFrontend = [];
 
 	/**
 	 * @var bool

@@ -1,47 +1,69 @@
 {% import "_includes/forms" as forms %}
 
 {% macro configWarning(setting, file) -%}
-    {%- set configArray = craft.app.config.getConfigFromFile(file) -%}
-    {%- if configArray[setting] is defined -%}
-        {{- "This is being overridden by the `#{setting}` setting in the `config/#{file}.php` file." |raw }}
-    {%- else -%}
-        {{ false }}
-    {%- endif -%}
+	{%- set configArray = craft.app.config.getConfigFromFile(file) -%}
+	{%- if configArray[setting] is defined -%}
+		{{- "This is being overridden by the `#{setting}` setting in the `config/#{file}.php` file." |raw }}
+	{%- else -%}
+		{{ false }}
+	{%- endif -%}
 {%- endmacro %}
 
 {{ forms.lightswitchField({
-    first: true,
-    label: 'Enabled' | t('whitelist'),
-    instructions: 'Should the whitelist be enforced?' | t('whitelist'),
-    id: 'enabled',
-    name: 'enabled',
-    value: 1,
-    on: settings.enabled,
-    errors: settings.getErrors('enabled'),
-    warning: _self.configWarning('enabled', 'whitelist'),
+	first: true,
+	label: 'Enabled' | t('whitelist'),
+	instructions: 'Should the whitelist be enforced?' | t('whitelist'),
+	id: 'enabled',
+	name: 'enabled',
+	value: 1,
+	on: settings.enabled,
+	errors: settings.getErrors('enabled'),
+	warning: _self.configWarning('enabled', 'whitelist'),
 	disabled: _self.configWarning('enabled', 'whitelist'),
 }) }}
 
 {{ forms.lightswitchField({
-    first: true,
-    label: 'Enabled Front-end' | t('whitelist'),
-    instructions: 'Should the whitelist be enforced for the front-end?' | t('whitelist'),
-    id: 'enabledFrondend',
-    name: 'enabledFrondend',
-    value: 1,
-    on: settings.enabledFrondend,
-    errors: settings.getErrors('enabledFrondend'),
-    warning: _self.configWarning('enabledFrondend', 'whitelist'),
-	disabled: _self.configWarning('enabledFrondend', 'whitelist'),
+	first: true,
+	label: 'Enabled Front-end' | t('whitelist'),
+	instructions: 'Should the whitelist be enforced for the front-end?' | t('whitelist'),
+	id: 'enabledFrontend',
+	name: 'enabledFrontend',
+	value: 1,
+	on: settings.enabledFrontend,
+	errors: settings.getErrors('enabledFrontend'),
+	warning: _self.configWarning('enabledFrontend', 'whitelist'),
+	disabled: _self.configWarning('enabledFrontend', 'whitelist'),
 }) }}
+
+
+{% if settings.enabledFrontend %}
+	{% set heading = 'Main whitelist override' | t('whitelist') %}
+	{% set instructions = 'List of IP adresses or CIDR blocks to whitelist for the control panel and the front-end (one per line), overrides the values in the plugin section.' | t('whitelist') %}
+{% else %}
+	{% set heading = 'Whitelist override' | t('whitelist') %}
+	{% set instructions = 'List of IP adresses or CIDR blocks to whitelist for the control panel (one per line), overrides the values in the plugin section.' | t('whitelist') %}
+{% endif %}
 
 {{ forms.textareaField({
 	label: 'Whitelist override' | t('whitelist'),
-	instructions: 'List of IP adresses or CIDR blocks to whitelist (one per line), overrides the values in the plugin section.' | t('whitelist'),
+	instructions: 'List of IP adresses or CIDR blocks to whitelist for the control panel (one per line), overrides the values in the plugin section.' | t('whitelist'),
 	id: 'whitelist',
 	name: 'whitelist',
 	value: settings.whitelist|join("\n"),
-    errors: settings.getErrors('whitelist'),
-    warning: _self.configWarning('whitelist', 'whitelist'),
+	errors: settings.getErrors('whitelist'),
+	warning: _self.configWarning('whitelist', 'whitelist'),
 	disabled: _self.configWarning('whitelist', 'whitelist') ? true : false,
 }) }}
+
+{% if settings.enabledFrontend %}
+	{{ forms.textareaField({
+		label: 'Front-end whitelist override' | t('whitelist'),
+		instructions: 'List of IP adresses or CIDR blocks to whitelist for the front-end (one per line), overrides the values in the plugin section.' | t('whitelist'),
+		id: 'whitelistFrontend',
+		name: 'whitelistFrontend',
+		value: settings.whitelistFrontend|join("\n"),
+		errors: settings.getErrors('whitelistFrontend'),
+		warning: _self.configWarning('whitelistFrontend', 'whitelist'),
+		disabled: _self.configWarning('whitelistFrontend', 'whitelist') ? true : false,
+	}) }}
+{% endif %}
